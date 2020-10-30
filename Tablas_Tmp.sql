@@ -44,7 +44,7 @@ FIELDS terminated by ';' ENCLOSED BY '"'
 lines TERMINATED BY '\n'
 ignore 1 rows;
 
-select * from tmp_3;
+select count(*) from tmp_1;
 
 LOAD DATA LOCAL INFILE '/tmp/Datos/CargaP-II.csv'
 INTO table tmp_2
@@ -63,4 +63,4 @@ ignore 1 rows
 poblacion_pais,area_km2,frontera_con,norte,sur,este,oeste)
 SET fecha_contrato = STR_TO_DATE(@fecha_contrato, '%d-%b-%Y');
 
-select * from tmp_1 where pais_inventor = 'Belgica';
+select * from tmp_1;
