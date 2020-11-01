@@ -34,9 +34,10 @@ create table tmp_2(
 );
 
 create table tmp_3(
-	nombre_region varchar(150) null,
+	nombre_region varchar(150) not null,
     region_padre varchar(150) null
 );
+drop table tmp_3;
 
 LOAD DATA LOCAL INFILE '/tmp/Datos/CargaP-III.csv'
 INTO table tmp_3
@@ -44,7 +45,7 @@ FIELDS terminated by ';' ENCLOSED BY '"'
 lines TERMINATED BY '\n'
 ignore 1 rows;
 
-select count(*) from tmp_1;
+select count(*) from tmp_3;
 
 LOAD DATA LOCAL INFILE '/tmp/Datos/CargaP-II.csv'
 INTO table tmp_2
