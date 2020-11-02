@@ -19,8 +19,35 @@ select t.nombre_region, c.cod_continente from tmp_3 t inner join continente c on
 where t.region_padre <> '';
 
 
-insert into pais (pais, capital, poblacion, area_km2, cod_region);
+insert into pais (pais, capital, poblacion, area_km2, cod_region)
+select distinct t.pais_inventor, t.capital, t.poblacion_pais, t.area_km2, r.cod_region from tmp_1 t left join region r on t.region_pais = r.region 
+where r.cod_region is not null;
+insert into pais (pais, capital, poblacion, area_km2, cod_continente)
+select distinct t.pais_inventor, t.capital, t.poblacion_pais, t.area_km2, c.cod_continente from tmp_1 t left join continente c on t.region_pais = c.continente
+where c.cod_continente is not null;
 
 
+insert into frontera (cod_pais, es_frontera, norte, sur, este, oeste)
+select distinct p.cod_pais, f.cod_pais as frontera, t.norte, t.sur, t.este, t.oeste from tmp_1 t inner join pais p on t.pais_inventor = p.pais
+inner join pais f on t.frontera_con = f.pais where frontera_con <> '';
 
-select distinct t.pais_inventor, t.capital, t.poblacion_pais, t.area_km2, r.cod_region from tmp_1 t left join region r on t.region_pais = r.region;
+
+insert into pregunta ( pregunta, cod_encuesta )
+select distinct t.pregunta, e.cod_encuesta from tmp_2 t left join encuesta e on t.nombre_encuesta = e.encuesta;
+
+
+insert into respuesta ( cod_pregunta, respuesta )
+select distinct p.cod_pregunta, t.respuesta_posible from tmp_2 t left join pregunta p on t.pregunta = p.pregunta;
+
+
+insert into pais_respuesta ( cod_pais, cod_respuesta )
+select pa.cod_pais, r.cod_respuesta from tmp_2 t inner join pais pa on t.pais = pa.pais inner join pregunta p on t.pregunta = p.pregunta 
+inner join respuesta r on t.respuesta_pais = substring( r.respuesta,1,1 ) and r.cod_pregunta = p.cod_pregunta
+group by t.pregunta, t.pais;
+
+
+insert into resp_corr ( cod_pregunta, cod_respuesta )
+select distinct p.cod_pregunta, r.cod_respuesta from tmp_2 t inner join pregunta p on t.pregunta = p.pregunta
+inner join respuesta r on t.respuesta_correcta = r.respuesta where t.respuesta_correcta <> '' group by t.pregunta;
+
+

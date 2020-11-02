@@ -46,20 +46,24 @@ create table pais (
     capital varchar(150) not null,
     poblacion int not null,
     area_km2 int not null,
-    cod_region int null,
+    cod_region int,
+    cod_continente int,
     constraint primary key ( cod_pais ),
-    constraint pais_region_fk foreign key ( cod_region ) references region ( cod_region )
+    constraint pais_region_fk foreign key ( cod_region ) references region ( cod_region ),
+    constraint arc_reg check ( ( ( cod_region is not null ) and ( cod_continente is null ) )
+	or ( ( cod_continente is not null ) and ( cod_region is null ) ) )
 ); /* 169 */
 /* drop table pais; */
 
 create table frontera (
+	cod_frontera int not null auto_increment,
     norte varchar(1),
     sur varchar(1),
     este varchar(1),
     oeste varchar(1),
     cod_pais int not null,
     es_frontera int not null,
-    constraint primary key ( cod_pais, es_frontera ),
+    constraint primary key ( cod_frontera ),
     constraint frontera_pais_fk foreign key ( cod_pais ) references pais ( cod_pais ),
     constraint frontera_pais_fk2 foreign key ( es_frontera ) references pais ( cod_pais )
 ); /* 488 */
@@ -84,9 +88,10 @@ create table respuesta (
 /* drop table respuesta; */
 
 create table pais_respuesta (
+	cod_pais_respuesta int not null auto_increment,
     cod_pais int not null,
     cod_respuesta int not null,
-    constraint primary key ( cod_pais, cod_respuesta ),
+    constraint primary key ( cod_pais_respuesta ),
     constraint pais_respuesta_pais_fk foreign key ( cod_pais ) references pais ( cod_pais ),
     constraint pais_respuesta_respuesta_fk foreign key ( cod_respuesta ) references respuesta ( cod_respuesta )
 ); /* 1412 */
