@@ -110,7 +110,7 @@ create table invento (
     cod_invento int not null auto_increment,
     nombre varchar(150) not null,
     anio_invento int not null,
-    rankinkg int not null,
+    ranking int not null,
     cod_pais int,
     constraint primary key ( cod_invento ),
     constraint invento_pais_fk foreign key ( cod_pais )references pais ( cod_pais )
