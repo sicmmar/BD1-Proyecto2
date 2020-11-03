@@ -8,12 +8,11 @@ insert into continente (continente) select distinct nombre_region from tmp_3 whe
 insert into encuesta (encuesta) select distinct nombre_encuesta from tmp_2;
 
 
-insert into area (area) select distinct area_invest_prof from tmp_1 where area_invest_prof <> '' group by area_invest_prof;
+insert into area (area, ranking) select distinct area_invest_prof, ranking from tmp_1 where area_invest_prof <> '' group by area_invest_prof;
 
 
 insert into region (region, cod_continente)
-select t.nombre_region, c.cod_continente from tmp_3 t inner join continente c on t.region_padre = c.continente
-where t.region_padre <> '';
+select t.nombre_region, c.cod_continente from tmp_3 t inner join continente c on t.region_padre = c.continente where t.region_padre <> '';
 
 
 insert into pais (pais, capital, poblacion, area_km2, cod_region)
@@ -39,20 +38,19 @@ select distinct p.cod_pregunta, t.respuesta_posible from tmp_2 t left join pregu
 
 insert into pais_respuesta ( cod_pais, cod_respuesta )
 select pa.cod_pais, r.cod_respuesta from tmp_2 t inner join pais pa on t.pais = pa.pais inner join pregunta p on t.pregunta = p.pregunta 
-inner join respuesta r on t.respuesta_pais = substring( r.respuesta,1,1 ) and r.cod_pregunta = p.cod_pregunta
-group by t.pregunta, t.pais;
+inner join respuesta r on t.respuesta_pais = substring( r.respuesta,1,1 ) and r.cod_pregunta = p.cod_pregunta;
+/*select distinct pais, count(*) veces from tmp_2 group by pais order by veces desc;*/
 
 
 insert into resp_corr ( cod_pregunta, cod_respuesta ) select distinct p.cod_pregunta, r.cod_respuesta from tmp_2 t inner join pregunta p on t.pregunta = p.pregunta
 inner join respuesta r on t.respuesta_correcta = r.respuesta where t.respuesta_correcta <> '' group by t.pregunta;
 
 
-insert into invento ( nombre, anio_invento, ranking, cod_pais ) select distinct t.invento, t.anio_invento, t.ranking, p.cod_pais from tmp_1 t inner join pais p 
+insert into invento ( nombre, anio_invento, cod_pais ) select distinct t.invento, t.anio_invento, p.cod_pais from tmp_1 t inner join pais p 
 on t.pais_invento = p.pais where t.invento <> '' group by t.invento;
 
 
-insert into inventor ( nombre, cod_pais )
-select distinct t.inventor, p.cod_pais from tmp_1 t inner join pais p on t.pais_inventor = p.pais where t.inventor <> '';
+insert into inventor ( nombre, cod_pais ) select distinct t.inventor, p.cod_pais from tmp_1 t inner join pais p on t.pais_inventor = p.pais where t.inventor <> '';
 
 
 insert into inventado ( cod_invento, cod_inventor )

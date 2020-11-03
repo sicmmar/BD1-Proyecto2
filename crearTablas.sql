@@ -25,6 +25,7 @@ create table encuesta (
 create table area (
     cod_area int not null auto_increment,
     area varchar(150) not null,
+    ranking int not null,
     cod_profesional  int null,
     constraint primary key ( cod_area ),
     constraint area_profesional_fk foreign key ( cod_profesional ) references profesional ( cod_profesional )
@@ -110,7 +111,6 @@ create table invento (
     cod_invento int not null auto_increment,
     nombre varchar(150) not null,
     anio_invento int not null,
-    ranking int not null,
     cod_pais int,
     constraint primary key ( cod_invento ),
     constraint invento_pais_fk foreign key ( cod_pais )references pais ( cod_pais )
